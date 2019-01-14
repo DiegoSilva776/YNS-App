@@ -14,7 +14,7 @@ function notificationsService($http) {
         upsertUser: upsertUser,
         getUserByEmail: getUserByEmail,
         getAllNotifications: getAllNotifications,
-        getUserNotification: getUserNotification,
+        getUserNotifications: getUserNotifications,
         upsertUserNotification: upsertUserNotification
     };
 
@@ -87,10 +87,20 @@ function notificationsService($http) {
         }
     }
 
-    function getUserNotification(userFirebaseUid, notificationFirebaseUid) {
-        return $http.get(configs.network.BASE_URL_NOTIFICATIONS_API + `userNotifications/${userFirebaseUid}/${notificationFirebaseUid}`)
-            .then(getData)
-            .catch(getError);
+    function getUserNotifications(user) {
+        var request = {
+            method: 'POST',
+            url: configs.network.BASE_URL_NOTIFICATIONS_API + "getAllUserNotifications/",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data: {
+                user : user
+            }
+        }
+
+        return $http(request)
+            .then(getData, getError);
 
         function getData(response) {
             return response;
@@ -127,32 +137,3 @@ function notificationsService($http) {
     }
     
 }
-
-/** 
- 
-// dataservice factory
-angular
-    .module('YnsApp.NotificationsService', ['ionic'])
-    .factory('notificationsService', notificationsService);
-
-notificationsService.$inject = ['$http'];
-
-function notificationsService($http) {
-
-    var getVersionNotificationsAPI = function() {
-        return $http.get('https://yns-api.herokuapp.com/api/')
-            .then(getAvengersComplete)
-            .catch(getAvengersFailed);
-
-        function gotData(response) {
-            return response.data.results;
-        }
-
-        function gotError(error) {
-            console.log('XHR Failed for getAvengers.' + error.data);
-        }
-    }
-}
-
-
- */

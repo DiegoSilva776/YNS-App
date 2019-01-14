@@ -6,12 +6,25 @@
 angular
   .module('YnsApp', [
     'ionic',
-    'YnsApp.NotificationsService'
+    'YnsApp.NotificationsPresenter'
   ])
 
-.controller('MainPageController', function($scope, $ionicModal, notificationsService) {
+.controller('MainPageController', function($scope, $ionicModal, notificationsPresenter) {
   /**
-   * Globals
+   * Data that is bound to the UI
+   */
+  $scope.hasInitialized = false;
+  $scope.isThereNewNotification = false;
+  $scope.user = {
+    email : "yns.user.1@email.com",
+    name : "John Doe",
+	  profilePic : "...",
+    latestNotification : "..."
+  };
+  $scope.notifications = [];
+  
+  /**
+   * Classes and selectors
    */
   $scope.classes = {
     hidden: "hidden",
@@ -34,25 +47,6 @@ angular
   /**
    * Notification's Modal
    */
-  // TODO: Get notifications from server
-  $scope.notifications = [
-    {
-      title: "New Feature!",
-      msg: 'Now you can customize your avatar uploading your selfie.<br/>Just click on the avatar, take or select a picture and save.<br/><img src="https://lh3.googleusercontent.com/-Ck8kcWIE4uk/AAAAAAAAAAI/AAAAAAAAAAA/AKxrwca-XBPLWpe6XTs4cMsKVxwZYZfKJQ/mo/photo.jpg?sz=46"/>',
-      time: "5 minutes ago",
-      hide: true,
-      new: true
-    },
-    {
-      title: "Notifications",
-      msg: "Now you can receive a bunch of interesting info by clicking on the notification button",
-      time: "10 minutes ago",
-      hide: true,
-      new: true
-    }
-  ];
-  //.TODO
-
   $ionicModal.fromTemplateUrl('notifications.html', function(modal) {
     $scope.taskModal = modal;
   }, {
@@ -66,10 +60,11 @@ angular
 
   $scope.closeNotificationsModal = function() {
     $scope.taskModal.hide();
+    $scope.updateStatusNotifications();
   };
 
-  $scope.expandListItem = function($e, idx, itemTitle, itemMsg) {
-    var notification = $scope.getNotificationByTitleMsg(itemTitle, itemMsg);
+  $scope.expandListItem = function(idx) {
+    var notification = $scope.getNotificationById(idx);
     
     if (notification !== null) {
       var notificationId = $scope.selectors.getNotificationId(idx);
@@ -80,12 +75,12 @@ angular
     }
   };
 
-  $scope.getNotificationByTitleMsg = function(title, msg) {
+  $scope.getNotificationById = function(id) {
 
     for (var i = 0; i < $scope.notifications.length; i++) {
       var notification = $scope.notifications[i];
 
-      if (notification.title === title && notification.msg === msg) {
+      if (notification.firebaseUid === id) {
         return notification;
       }
     }
@@ -93,90 +88,116 @@ angular
     return null;
   };
 
-  $scope.closeMsg = function($e, idx, itemTitle, itemMsg) {
-    var notification = $scope.getNotificationByTitleMsg(itemTitle, itemMsg);
+  $scope.closeMsg = function(idx) {
+    var notification = $scope.getNotificationById(idx);
     
     if (notification !== null) {
       notification.new = false;
-
-      var notificationId = $scope.selectors.getNotificationId(idx);
-      angular.element(document.querySelector(notificationId)).addClass($scope.classes.reShrink);
-
-      // Todo, make a request to the server to mark the selected notification as read by the current user
-      // ..
-
-      if ($scope.wereAllNotificationsRead()) {
-        $scope.hideUnreadNotificationIndicator();
-        $scope.closeNotificationsModal();
-      }
-      // ./Todo
+      $scope.shrinkNotification(true, idx);
+      upsertStatusUserNotification(notification);
     }
   };
 
-  $scope.wereAllNotificationsRead = function() {
+  $scope.shrinkNotification = function(shrink, idx) {
+    var notificationId = $scope.selectors.getNotificationId(idx);
+    var el = document.querySelector(notificationId)
+
+    if (shrink) {
+      angular.element(el).addClass($scope.classes.reShrink);
+    } else {
+      angular.element(el).removeClass($scope.classes.reShrink);
+    }
+  }
+
+  $scope.updateStatusNotifications = function() {
+    $scope.isThereNewNotification = false;
 
     for (var i = 0; i < $scope.notifications.length; i++) {
       var notification = $scope.notifications[i];
 
       if (notification.new) {
-        return false;
+        $scope.isThereNewNotification = true;
+      } else {
+        $scope.shrinkNotification(true, notification.firebaseUid);
       }
     }
 
-    return true;
+    $scope.showUnreadNotificatonIndicator($scope.isThereNewNotification);
   }
 
-  $scope.hideUnreadNotificationIndicator = function() {
-    angular.element(document.querySelector($scope.selectors.notificationsImg)).addClass($scope.classes.noNewMsgs);
-    angular.element(document.querySelector($scope.selectors.newNotificationIndicator)).addClass($scope.classes.hidden);
-  }
-
-  if ($scope.wereAllNotificationsRead()) {
-    $scope.hideUnreadNotificationIndicator();
+  $scope.showUnreadNotificatonIndicator = function(show) {
+    
+    if (show) {
+      angular.element(document.querySelector($scope.selectors.notificationsImg)).removeClass($scope.classes.noNewMsgs);
+      angular.element(document.querySelector($scope.selectors.newNotificationIndicator)).removeClass($scope.classes.hidden);
+    } else {
+      angular.element(document.querySelector($scope.selectors.notificationsImg)).addClass($scope.classes.noNewMsgs);
+      angular.element(document.querySelector($scope.selectors.newNotificationIndicator)).addClass($scope.classes.hidden);
+    }
   }
 
   /**
-   * Connection to services
+   * Connect to services via presenters and feed the UI
    */
-  initNotificationsService();
+  if (!$scope.hasInitialized) {
+    $scope.hasInitialized = true;
+    initPresenters();
+  }
+  
+  function initPresenters() {
+    registerUserOnNotificationAPI();
+  }
 
-  function initNotificationsService() {
-    // Globals
-    notificationsService.getVersionAPI()
-      .then(function(data) {
-        console.log(JSON.stringify(data));
-      });
+  function registerUserOnNotificationAPI() {
+    notificationsPresenter.upsertUser($scope.user.email, 
+                                      $scope.user.name, 
+                                      $scope.user.profilePic, 
+                                      $scope.user.latestNotification)
+    .then(function(user) {
+          
+      if (user) {
+        $scope.user = user;
+        getListNotifications($scope.user);
+      } else {
+        console.log("Failed to upsert and return updated user from DB");  
+      }
+    }).catch(function(err) {
+      console.log("Failed to upsert and return updated user from DB");  
+    });
+  }
 
-    // Users
-    notificationsService.upsertUser("yns.user1@email.com", "yns.user", "...", "...")
-      .then(function(data) {
-        console.log(JSON.stringify(data));
-      });
+  function getListNotifications(user) {
+    notificationsPresenter.getListNotifications(user)
+    .then(function(notifications) {
 
-    notificationsService.getUserByEmail("user1@email.com")
-      .then(function(data) {
-        console.log(JSON.stringify(data));
-      });
+      if (notifications) {
+        $scope.notifications = notifications;
+        $scope.updateStatusNotifications();
+      } else {
+        console.log("Failed to get list of notifications");  
+      }
+    }).catch(function(err) {
+      console.log("Failed to get list of notifications " + err);  
+    });
+  }
 
-    // Notifications
-    notificationsService.getAllNotifications()
-      .then(function(data) {
-        console.log(JSON.stringify(data));
-      });
+  function upsertStatusUserNotification(notification) {
+    notificationsPresenter.upsertUserNotification($scope.user, 
+                                                  notification)
+    .then(function(success) {
+      
+      if (success) {
+        $scope.updateStatusNotifications();
 
-    notificationsService.getUserNotification("-LWC0NGRCPv3yw89Uzod", "-LWC1modNMprBz00KnY8")
-      .then(function(data) {
-        data = data.data.data;
-        
-        var user = data.user;
-        var notification = data.notification;
-
-        notificationsService.upsertUserNotification(user, notification)
-          .then(function(data) {
-            console.log(JSON.stringify(data));
-          });
-      });
-    
+        if (!$scope.isThereNewNotification) {
+          $scope.closeNotificationsModal();
+        }
+      } else {
+        console.log("Failed to upsert the relationship between the current User and the selected Notification");
+      }
+    }).catch(function(err) {
+      console.log("Failed to upsert the relationship between the current User and the selected Notification");
+    });
   }
 
 })

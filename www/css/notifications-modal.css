@@ -68,6 +68,9 @@
 .list-notifications-item .notification-content.re-shrinked {
     max-height: 165px;
 }
+.list-notifications-item .notification-content.re-shrinked {
+    opacity: 0.75;
+}
 .list-notifications-item .notification-content small {
     color: #a9acb9;
 }
