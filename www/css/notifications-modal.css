@@ -1,0 +1,111 @@
+/**
+ * Notifications Modal
+ */
+.back-img {
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+    top: 4px;
+}
+.page-body .pane {
+    background-color: transparent;
+}
+.modal .page-header {
+    top: 0px;
+    height: 80px;
+    background-color: #716d6d80;
+    z-index: 100;
+}
+.list-notifications {
+    display:block;
+    position:relative;
+    left:0px;
+    top:35px;
+    width:100%;
+    height:auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.list-notifications-item {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: 80%;
+    max-width: 350px;
+    height: auto;
+    margin:auto;
+    margin-top: 20px;
+}
+.list-notifications-item .shrinked-indicator {
+    display: block;
+    position: absolute;
+    float: right;
+    right: -5px;
+    top: -5px;
+    width: 25px;
+    height: 25px;
+    background-color: orange;
+    border: 3px solid #777777;
+    border-radius: 35px;
+    z-index: 10;
+}
+.list-notifications-item .notification-content,
+.list-notifications-item .notification-content.shrinked,
+.list-notifications-item .notification-content.re-shrinked {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.list-notifications-item .notification-content.shrinked,
+.list-notifications-item .notification-content.re-shrinked {
+    max-height: 165px;
+}
+.list-notifications-item .notification-content small {
+    color: #a9acb9;
+}
+.list-notifications-item .notification-content h2 {
+    margin-top: 20px;
+    font-weight: 600;
+    color: #616067;
+}
+.list-notifications-item .notification-content .description {
+    color: #616067;
+    white-space: normal;
+}
+.list-notifications-item .notification-content .description br {
+    line-height: 2.5;
+}
+.list-notifications-item .notification-content img {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: auto;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
+}
+.list-notifications-item .notification-content .confirm-button {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: auto;
+    margin:auto;
+    margin-top: 20px;
+    padding-left: 35px;
+    padding-right: 35px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: orange;
+    color: #ffffff;
+    border: 1px solid rgb(224, 151, 15);
+    border-radius: 30px;
+}

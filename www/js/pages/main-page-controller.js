@@ -3,9 +3,13 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'yns_app' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('YnsApp', ['ionic'])
+angular
+  .module('YnsApp', [
+    'ionic',
+    'YnsApp.NotificationsService'
+  ])
 
-.controller('MainPageController', function($scope, $ionicModal) {
+.controller('MainPageController', function($scope, $ionicModal, notificationsService) {
   /**
    * Globals
    */
@@ -129,6 +133,50 @@ angular.module('YnsApp', ['ionic'])
 
   if ($scope.wereAllNotificationsRead()) {
     $scope.hideUnreadNotificationIndicator();
+  }
+
+  /**
+   * Connection to services
+   */
+  initNotificationsService();
+
+  function initNotificationsService() {
+    // Globals
+    notificationsService.getVersionAPI()
+      .then(function(data) {
+        console.log(JSON.stringify(data));
+      });
+
+    // Users
+    notificationsService.upsertUser("yns.user1@email.com", "yns.user", "...", "...")
+      .then(function(data) {
+        console.log(JSON.stringify(data));
+      });
+
+    notificationsService.getUserByEmail("user1@email.com")
+      .then(function(data) {
+        console.log(JSON.stringify(data));
+      });
+
+    // Notifications
+    notificationsService.getAllNotifications()
+      .then(function(data) {
+        console.log(JSON.stringify(data));
+      });
+
+    notificationsService.getUserNotification("-LWC0NGRCPv3yw89Uzod", "-LWC1modNMprBz00KnY8")
+      .then(function(data) {
+        data = data.data.data;
+        
+        var user = data.user;
+        var notification = data.notification;
+
+        notificationsService.upsertUserNotification(user, notification)
+          .then(function(data) {
+            console.log(JSON.stringify(data));
+          });
+      });
+    
   }
 
 })

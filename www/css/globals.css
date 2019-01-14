@@ -1,0 +1,84 @@
+/**
+ * Globals
+ */
+ .overflow-scroll {
+    overflow-y: auto;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+@media (min-width: 680px) {
+
+    .modal {
+        top: 0%;
+        right: 0%;
+        bottom: 0%;
+        left: 0%;
+        min-height: 240px;
+        width: 100%;
+    }
+
+}
+
+/**
+ * Page containers
+ */
+.page {
+    background-color: #737373;
+}
+.page-header,
+.page-body {
+    display: inline-block;
+    position: fixed;
+    left: 0px;
+    width: 100vw;
+}
+.page-header {
+    top: 0px;
+    height: 80px;
+    background-color: #716d6d80;
+    z-index: 10;
+}
+.page-body {
+    top: -5px;
+    height: 100vh;
+    padding: 50px;
+}
+
+/**
+ * Page header
+ */
+.left-container,
+.right-container {
+    display: block;
+    position: relative;
+    width: auto;
+    height: auto;
+    padding: 20px;
+}
+.left-container {
+    float: left;
+    left: 0px;
+    top: 0px;
+}
+.right-container {
+    float: right;
+    right: 0px;
+    top: 0px;
+}
+
+/**
+ * Main Page and Notifications Modal
+ */
+.profile-img,
+.notifications-img,
+.unread-notification-indicator,
+.back-img {
+    position: relative;
+    display: block;
+    float: left;
+    left: 0px;
+    top: -6px;
+}
