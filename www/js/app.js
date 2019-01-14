@@ -1,9 +1,137 @@
-// Ionic Starter App
+// Ionic YNS App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
+// 'yns_app' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic'])
+angular.module('YnsApp', ['ionic'])
+
+.controller('MainPageController', function($scope, $ionicModal) {
+  /**
+   * Globals
+   */
+  $scope.classes = {
+    hidden: "hidden",
+    shrink: "shrinked",
+    reShrink: "re-shrinked",
+    noNewMsgs: "no-new-msgs"
+  }
+
+  $scope.selectors = {
+    notificationsImg: "#notifications-img",
+    newNotificationIndicator: "#new-notification-indicator",
+    getNotificationId: function(idx) {
+      return "#notification-" + idx;
+    },
+    getNotificationShrinkId: function(idx) {
+      return "#notification-shrink-" + idx;
+    }
+  }
+
+  /**
+   * Notification's Modal
+   */
+  // TODO: Get notifications from server
+  $scope.notifications = [
+    {
+      title: "New Feature!",
+      msg: 'Now you can customize your avatar uploading your selfie.<br/>Just click on the avatar, take or select a picture and save.<br/><img src="https://lh3.googleusercontent.com/-Ck8kcWIE4uk/AAAAAAAAAAI/AAAAAAAAAAA/AKxrwca-XBPLWpe6XTs4cMsKVxwZYZfKJQ/mo/photo.jpg?sz=46"/>',
+      time: "5 minutes ago",
+      hide: true,
+      new: true
+    },
+    {
+      title: "Notifications",
+      msg: "Now you can receive a bunch of interesting info by clicking on the notification button",
+      time: "10 minutes ago",
+      hide: true,
+      new: true
+    }
+  ];
+  //.TODO
+
+  $ionicModal.fromTemplateUrl('notifications.html', function(modal) {
+    $scope.taskModal = modal;
+  }, {
+    scope: $scope,
+    animation: 'scale-in'
+  });
+
+  $scope.openNotificationsModal = function() {
+    $scope.taskModal.show();
+  };
+
+  $scope.closeNotificationsModal = function() {
+    $scope.taskModal.hide();
+  };
+
+  $scope.expandListItem = function($e, idx, itemTitle, itemMsg) {
+    var notification = $scope.getNotificationByTitleMsg(itemTitle, itemMsg);
+    
+    if (notification !== null) {
+      var notificationId = $scope.selectors.getNotificationId(idx);
+      var notifShrinkIndicatorId = $scope.selectors.getNotificationShrinkId(idx);
+
+      angular.element(document.querySelector(notificationId)).removeClass($scope.classes.shrink);
+      angular.element(document.querySelector(notifShrinkIndicatorId)).addClass($scope.classes.hidden);
+    }
+  };
+
+  $scope.getNotificationByTitleMsg = function(title, msg) {
+
+    for (var i = 0; i < $scope.notifications.length; i++) {
+      var notification = $scope.notifications[i];
+
+      if (notification.title === title && notification.msg === msg) {
+        return notification;
+      }
+    }
+
+    return null;
+  };
+
+  $scope.closeMsg = function($e, idx, itemTitle, itemMsg) {
+    var notification = $scope.getNotificationByTitleMsg(itemTitle, itemMsg);
+    
+    if (notification !== null) {
+      notification.new = false;
+
+      var notificationId = $scope.selectors.getNotificationId(idx);
+      angular.element(document.querySelector(notificationId)).addClass($scope.classes.reShrink);
+
+      // Todo, make a request to the server to mark the selected notification as read by the current user
+      // ..
+
+      if ($scope.wereAllNotificationsRead()) {
+        $scope.hideUnreadNotificationIndicator();
+        $scope.closeNotificationsModal();
+      }
+      // ./Todo
+    }
+  };
+
+  $scope.wereAllNotificationsRead = function() {
+
+    for (var i = 0; i < $scope.notifications.length; i++) {
+      var notification = $scope.notifications[i];
+
+      if (notification.new) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  $scope.hideUnreadNotificationIndicator = function() {
+    angular.element(document.querySelector($scope.selectors.notificationsImg)).addClass($scope.classes.noNewMsgs);
+    angular.element(document.querySelector($scope.selectors.newNotificationIndicator)).addClass($scope.classes.hidden);
+  }
+
+  if ($scope.wereAllNotificationsRead()) {
+    $scope.hideUnreadNotificationIndicator();
+  }
+
+})
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

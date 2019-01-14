@@ -1,1 +1,303 @@
-/* Empty. Add your own CSS if you like */
+/**
+ * Globals
+ */
+.overflow-scroll {
+    overflow-y: auto;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+@media (min-width: 680px) {
+
+    .modal {
+        top: 0%;
+        right: 0%;
+        bottom: 0%;
+        left: 0%;
+        min-height: 240px;
+        width: 100%;
+    }
+
+}
+
+/**
+ * Page containers
+ */
+.page {
+    background-color: #737373;
+}
+.page-header,
+.page-body {
+    display: inline-block;
+    position: fixed;
+    left: 0px;
+    width: 100vw;
+}
+.page-header {
+    top: 0px;
+    height: 80px;
+    background-color: #716d6d80;
+    z-index: 10;
+}
+.page-body {
+    top: -5px;
+    height: 100vh;
+    padding: 50px;
+}
+
+/**
+ * Page header
+ */
+.left-container,
+.right-container {
+    display: block;
+    position: relative;
+    width: auto;
+    height: auto;
+    padding: 20px;
+}
+.left-container {
+    float: left;
+    left: 0px;
+    top: 0px;
+}
+.right-container {
+    float: right;
+    right: 0px;
+    top: 0px;
+}
+
+/**
+ * Main Page and Notifications Modal
+ */
+.profile-img,
+.notifications-img,
+.unread-notification-indicator,
+.back-img {
+    position: relative;
+    display: block;
+    float: left;
+    left: 0px;
+    top: -6px;
+}
+
+/**
+ * Main Page
+ */
+.profile-img {
+    width: 50px;
+    height: 50px;
+    padding-top: 9px;
+    border: 3px solid #ffffff;
+    border-radius: 50px;
+}
+.notifications-img,
+.notifications-img.no-new-msgs {
+    width: 22px;
+    height: 22px;
+    top: 10px;
+}
+.notifications-img.no-new-msgs {
+    opacity: 0.5;
+}
+.notifications-img:hover {
+    width: 24px;
+    height: 24px;
+    top: 8px;
+}
+.new-notification-indicator {
+    position: absolute;
+    left: 27px;
+    top: 20px;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #737373;
+    border-radius: 32px;
+    background-color: orange;
+}
+
+/**
+ * Notifications Modal
+ */
+.back-img {
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+    top: 4px;
+}
+.page-body .pane {
+    background-color: transparent;
+}
+.modal .page-header {
+    top: 0px;
+    height: 80px;
+    background-color: #716d6d80;
+    z-index: 100;
+}
+.list-notifications {
+    display:block;
+    position:relative;
+    left:0px;
+    top:35px;
+    width:100%;
+    height:auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.list-notifications-item {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: 80%;
+    max-width: 350px;
+    height: auto;
+    margin:auto;
+    margin-top: 20px;
+}
+.list-notifications-item .shrinked-indicator {
+    display: block;
+    position: absolute;
+    float: right;
+    right: -5px;
+    top: -5px;
+    width: 25px;
+    height: 25px;
+    background-color: orange;
+    border: 3px solid #777777;
+    border-radius: 35px;
+    z-index: 10;
+}
+.list-notifications-item .notification-content,
+.list-notifications-item .notification-content.shrinked,
+.list-notifications-item .notification-content.re-shrinked {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.list-notifications-item .notification-content.shrinked,
+.list-notifications-item .notification-content.re-shrinked {
+    max-height: 165px;
+}
+.list-notifications-item .notification-content small {
+    color: #a9acb9;
+}
+.list-notifications-item .notification-content h2 {
+    margin-top: 20px;
+    font-weight: 600;
+    color: #616067;
+}
+.list-notifications-item .notification-content .description {
+    color: #616067;
+    white-space: normal;
+}
+.list-notifications-item .notification-content .description br {
+    line-height: 2.5;
+}
+.list-notifications-item .notification-content img {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: 100%;
+    height: auto;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
+}
+.list-notifications-item .notification-content .confirm-button {
+    display: block;
+    position: relative;
+    top: 0px;
+    width: auto;
+    margin:auto;
+    margin-top: 20px;
+    padding-left: 35px;
+    padding-right: 35px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: orange;
+    color: #ffffff;
+    border: 1px solid rgb(224, 151, 15);
+    border-radius: 30px;
+}
+
+/**
+ * Custom animations
+ */
+/* Scale-In Animation */
+.scale-in {
+    transform: scale(0.9);
+    opacity: 0;
+}
+.scale-in.ng-enter,
+.scale-in > .ng-enter {
+    transition: all cubic-bezier(.1, .7, .1, 1) 400ms;
+}
+.scale-in.ng-enter-active,
+.scale-in > .ng-enter-active {
+    transform: scale(1);
+    opacity: 1;
+}
+.scale-in.ng-leave,
+.scale-in > .ng-leave {
+    transition: all ease-in-out 250ms;
+}
+ 
+ /* Sample animation
+ -webkit-transform: translateZ(0);
+ -moz-transform: translateZ(0);
+ -ms-transform: translateZ(0);
+ -o-transform: translateZ(0);
+ transform: translateZ(0);
+ animation-name: transparent-bg;
+ animation-duration: 250ms;
+ animation-fill-mode: forwards;
+ -webkit-animation-name: transparent-bg;
+ -webkit-animation-duration: 250ms;
+ -webkit-animation-fill-mode: forwards;
+ -moz-animation-name: transparent-bg;
+ -moz-animation-duration: 250ms;
+ -moz-animation-fill-mode: forwards;
+ -ms-animation-name: transparent-bg;
+ -ms-animation-duration: 250ms;
+ -ms-animation-fill-mode: forwards
+ 
+ @keyframes fade-in {
+     from {
+         opacity: 0
+     }
+ 
+     to {
+         opacity: 1
+     }
+ }
+ 
+ @-moz-keyframes fade-in {
+     from {
+         opacity: 0
+     }
+ 
+     to {
+         opacity: 1
+     }
+ }
+ 
+ @-webkit-keyframes fade-in {
+     from {
+         opacity: 0
+     }
+ 
+     to {
+         opacity: 1
+     }
+ }
+ */

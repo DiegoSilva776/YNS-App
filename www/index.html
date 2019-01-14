@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <title></title>
 
-    <link rel="manifest" href="manifest.json">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <title>YNS App</title>
 
-    <!-- un-comment this code to enable service worker
+  <link rel="manifest" href="manifest.json">
+
+  <!-- un-comment this code to enable service worker
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
@@ -16,30 +17,73 @@
       }
     </script>-->
 
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+  <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
 
-    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
-    <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
+  <!-- ionic/angularjs js -->
+  <script src="lib/ionic/js/ionic.bundle.js"></script>
 
-    <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
+  <!-- cordova script (this will be a 404 during development) -->
+  <script src="cordova.js"></script>
 
-    <!-- your app's js -->
-    <script src="js/app.js"></script>
-  </head>
-  <body ng-app="starter">
+  <!-- your app's js -->
+  <script src="js/app.js"></script>
+</head>
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content>
-      </ion-content>
-    </ion-pane>
-  </body>
+<body ng-app="YnsApp" ng-controller="MainPageController" class="page">
+
+  <div class="page-header">
+    <div class="left-container">
+      <img class="profile-img" src="img/ico_profile.svg">
+    </div>
+    <div class="right-container">
+      <img ng-click="openNotificationsModal()" id="notifications-img" class="notifications-img" src="img/ico_notification.svg">
+      <div id="new-notification-indicator" class="new-notification-indicator"></div>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <!-- ... -->
+  </div>
+
+</body>
+
+<script id="notifications.html" type="text/ng-template">
+
+  <div class="modal page">
+
+    <!-- Modal header -->
+    <div class="page-header">
+      <div class="left-container">
+        <img ng-click="closeNotificationsModal()" class="back-img enabled" src="img/ico_left_arrow.svg">
+      </div>
+    </div>
+
+    <!-- Modal body -->
+    <div class="page-body">
+      <ion-view>
+        <ion-content overflow-scroll="true">
+            <div class="list list-notifications" >
+                <div class="list-notifications-item" ng-repeat="notification in notifications">
+                  <div ng-click="expandListItem($event, $index, notification.title, notification.msg)" id="{{ 'notification-shrink-' + $index }}" class="shrinked-indicator"></div>
+                  <div ng-click="expandListItem($event, $index, notification.title, notification.msg)" id="{{ 'notification-' + $index }}" class="notification-content shrinked">
+                    <small>{{notification.time}}</small>
+                    <h2>{{notification.title}}</h2>
+                    <ng-bind-html class="description" ng-bind-html="notification.msg"></ng-bind-html>
+                    <button ng-click="closeMsg($event, $index, notification.title, notification.msg)" class="confirm-button">Got it</button>
+                  </div>
+                <div>
+            </div>
+        </ion-content>
+      </ion-view>
+    </div>
+
+  </div>
+
+</script>
+
 </html>
