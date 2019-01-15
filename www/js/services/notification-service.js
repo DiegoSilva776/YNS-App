@@ -9,6 +9,8 @@ notificationsService.$inject = ['$http'];
 
 function notificationsService($http) {
 
+    $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+
     return {
         getVersionAPI: getVersionAPI,
         upsertUser: upsertUser,

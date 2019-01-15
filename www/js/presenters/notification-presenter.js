@@ -62,11 +62,19 @@ function notificationsPresenter(notificationsService) {
                         var notification = data[i];
                         notification.new = true;
 
-                        var updatedAt = new Date(notification.updatedAt);
-                        var diff = Math.abs(new Date() - updatedAt);
-                        notification.time = math.utils.dhm(diff);
+                        var scheduleTime = new Date(notification.scheduleTime);
+                        var currentTime = new Date();
+                        
+                        if (scheduleTime < currentTime) {
+                            var diff = currentTime - scheduleTime;
+                            var time = math.utils.dhm(diff);
+                            notification.time = time
+                            notifications.push(notification);
 
-                        notifications.push(notification);
+                            notifications.sort(function(a, b) {
+                                return new Date(b.scheduleTime) - new Date(a.scheduleTime);
+                            });
+                        }
                     }
 
                     notificationsService.getUserNotifications(user)
@@ -86,7 +94,7 @@ function notificationsPresenter(notificationsService) {
                                 }
                             }
 
-                            resolve(notifications);       
+                            resolve(notifications);
                         });
 
                 } catch (err) {

@@ -146,6 +146,7 @@ angular
   
   function initPresenters() {
     registerUserOnNotificationAPI();
+    listenNewNotifications();
   }
 
   function registerUserOnNotificationAPI() {
@@ -159,25 +160,46 @@ angular
         $scope.user = user;
         getListNotifications($scope.user);
       } else {
-        console.log("Failed to upsert and return updated user from DB");  
+        console.log(msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL);  
       }
     }).catch(function(err) {
-      console.log("Failed to upsert and return updated user from DB");  
+      console.log(msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL);  
     });
+  }
+
+  function listenNewNotifications() {
+    try {
+      var notificationsRef = firebase.database().ref("notifications/");
+      notificationsRef.on('value', function(snapshot) {
+
+        if ($scope.user.firebaseUid != undefined) {
+          getListNotifications($scope.user)
+        } else {
+          registerUserOnNotificationAPI();
+        }
+      });
+    } catch (err) {
+      console.log(msgs.MSG_FAILED_LISTEN_NEW_NOTIFICATIONS + err);
+    }
   }
 
   function getListNotifications(user) {
     notificationsPresenter.getListNotifications(user)
-    .then(function(notifications) {
+    .then(function(updatedNotifications) {
 
-      if (notifications) {
-        $scope.notifications = notifications;
+      if (updatedNotifications) {
+        $scope.notifications = updatedNotifications;
+        
+        for (var i = 0; i < $scope.notifications.length; i++) {
+          $scope.notifications[i].receivedAt = new Date().toISOString();
+        }
+
         $scope.updateStatusNotifications();
       } else {
-        console.log("Failed to get list of notifications");  
+        console.log(msgs.MSG_FAILED_LOAD_NOTIFICATIONS + err);
       }
     }).catch(function(err) {
-      console.log("Failed to get list of notifications " + err);  
+      console.log(msgs.MSG_FAILED_LOAD_NOTIFICATIONS + err);
     });
   }
 
@@ -193,10 +215,10 @@ angular
           $scope.closeNotificationsModal();
         }
       } else {
-        console.log("Failed to upsert the relationship between the current User and the selected Notification");
+        console.log(msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL);
       }
     }).catch(function(err) {
-      console.log("Failed to upsert the relationship between the current User and the selected Notification");
+      console.log(msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL);
     });
   }
 

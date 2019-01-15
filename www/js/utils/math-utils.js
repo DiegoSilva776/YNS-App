@@ -6,6 +6,8 @@ var math = {};
 math.utils = {
 
     dhm: function(t) {
+        
+
         var cd = 24 * 60 * 60 * 1000,
             ch = 60 * 60 * 1000,
             d = Math.floor(t / cd),
@@ -33,6 +35,12 @@ math.utils = {
 
         } else if (m > 0) {
             return `${m} minutes`;
+
+        } else if (m == 0){
+            return "Now";
+
+        } else {
+            return false;
         }
     }
 
