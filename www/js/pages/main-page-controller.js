@@ -6,13 +6,62 @@
 angular
   .module('YnsApp', [
     'ionic',
+    'ngCordova',
     'YnsApp.NotificationsPresenter'
   ])
 
-.controller('MainPageController', function($scope, $ionicModal, notificationsPresenter) {
+.controller('MainPageController', function($scope, $ionicModal, $cordovaCamera, notificationsPresenter) {
+
   /**
    * Data that is bound to the UI
    */
+  //console.log($cordovaCamera);
+
+  document.addEventListener("deviceready", function () {
+
+    var options = {
+      quality: 50,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      allowEdit: true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 100,
+      targetHeight: 100,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false,
+	  correctOrientation:true
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      var image = document.getElementById('myImage');
+      image.src = "data:image/jpeg;base64," + imageData;
+    }, function(err) {
+      // error
+    });
+
+  }, false);
+
+  /*
+  document.addEventListener("deviceready", function () {
+
+    var options = {
+      destinationType: Camera.DestinationType.FILE_URI,
+      sourceType: Camera.PictureSourceType.CAMERA,
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageURI) {
+      var image = document.getElementById('myImage');
+      image.src = imageURI;
+    }, function(err) {
+      // error
+    });
+
+
+    $cordovaCamera.cleanup().then(...); // only for FILE_URI
+
+  }, false);
+   */
+
   $scope.hasInitialized = false;
   $scope.isThereNewNotification = false;
   $scope.user = {
@@ -135,6 +184,29 @@ angular
       angular.element(document.querySelector($scope.selectors.newNotificationIndicator)).addClass($scope.classes.hidden);
     }
   }
+
+  var options = {
+    maximumImagesCount: 10,
+    width: 800,
+    height: 800,
+    quality: 80
+  };
+
+  /*
+  window.imagePicker.getPictures(options,
+    function(results) {
+      for (var i = 0; i < results.length; i++) {
+        console.log('Image URI: ' + results[i]);
+      }
+    }, function (error) {
+      console.log('Error: ' + error);
+    }
+  );
+  */
+
+  console.log(window);
+
+  console.log("Get pictures");
 
   /**
    * Connect to services via presenters and feed the UI
