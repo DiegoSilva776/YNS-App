@@ -88,6 +88,9 @@
     <plugin name="cordova-plugin-advanced-http" spec="2.0.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
+    <plugin name="cordova-plugin-telerik-imagepicker" spec="2.2.2">
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="We need access to your gallery to upload a profile image" />
+    </plugin>
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="7.1.4" />
 </widget>

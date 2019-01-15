@@ -22,4 +22,12 @@ configs.network = {
 
 }
 
+configs.files = {
+
+    PREFIX_PROFILE_IMGS: "images/profile_",
+    IMGS_CONTENT_TYPE: "image/jpeg"
+
+}
+
+// Init configurations
 configs.network.init();
