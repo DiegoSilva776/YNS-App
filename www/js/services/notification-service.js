@@ -8,8 +8,6 @@ notificationsService.$inject = ['$http'];
 
 function notificationsService($http) {
 
-    $http.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-
     return {
         getVersionAPI: getVersionAPI,
         upsertUser: upsertUser,
@@ -35,10 +33,14 @@ function notificationsService($http) {
     
     function upsertUser(email, name, profilePic, latestNotification) {
         var request = {
+            async: true,
+            crossDomain: true,
+            processData: false,
             method: 'POST',
             url: configs.network.BASE_URL_NOTIFICATIONS_API + "users/",
             headers: {
-              'Content-Type': 'application/json'
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
             },
             data: {
                 email : email,
@@ -90,10 +92,14 @@ function notificationsService($http) {
 
     function getUserNotifications(user) {
         var request = {
+            async: true,
+            crossDomain: true,
+            processData: false,
             method: 'POST',
             url: configs.network.BASE_URL_NOTIFICATIONS_API + "getAllUserNotifications/",
             headers: {
-              'Content-Type': 'application/json'
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
             },
             data: {
                 user : user
@@ -114,10 +120,14 @@ function notificationsService($http) {
 
     function upsertUserNotification(user, notification) {
         var request = {
+            async: true,
+            crossDomain: true,
+            processData: false,
             method: 'POST',
             url: configs.network.BASE_URL_NOTIFICATIONS_API + "userNotifications/",
             headers: {
-              'Content-Type': 'application/json'
+                "Content-Type": "application/json",
+                "cache-control": "no-cache"
             },
             data: {
                 user : user,

@@ -101,6 +101,10 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
         }
     }
 
+    $scope.showEmptyListMsg = function() {
+        $rootScope.isListNotificationsEmpty = $rootScope.notifications.length == 0;
+    }
+
     $scope.showUnreadNotificatonIndicator = function (show) {
         try {
 
@@ -184,13 +188,9 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                             $rootScope.notifications[i].receivedAt = new Date().toISOString();
                         }
     
-                        if ($rootScope.notifications.length == 0) {
-                            angular.element(document.getElementById($rootScope.selectors.emptyListNotifications)).removeClass($rootScope.classes.hidden);
-                        } else {
-                            angular.element(document.getElementById($rootScope.selectors.emptyListNotifications)).addClass($rootScope.classes.hidden);
-                        }
-
                         $scope.updateStatusNotifications();
+                        $scope.showEmptyListMsg();
+                        
                     } else {
                         log.logMessage(`${TAG} ${msgs.MSG_FAILED_LOAD_NOTIFICATIONS}`);
                     }

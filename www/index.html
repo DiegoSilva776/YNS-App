@@ -88,7 +88,7 @@
       </ion-view>
     </div>
 
-    <div id="empty-list-notifications" class="empty-list-notifications" class="ng-hide" ng-model="msgEmptyList">
+    <div id="empty-list-notifications" class="empty-list-notifications" ng-show="isListNotificationsEmpty">
       <h2>{{msgEmptyList.title}}</h2>
       <ng-bind-html class="description" ng-bind-html="msgEmptyList.msg"></ng-bind-html>
       <button ng-click="closeNotificationsModal()" class="confirm-button">Got it</button>

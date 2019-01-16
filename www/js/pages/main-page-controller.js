@@ -35,7 +35,7 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
 
   $rootScope.selectors = {
     profileImgId: "profile-img",
-    emptyListNotifications: "empty-list-notifications",
+    emptyListNotifications: "#empty-list-notifications",
     notificationsImg: "#notifications-img",
     newNotificationIndicator: "#new-notification-indicator",
     getNotificationId: function (idx) {

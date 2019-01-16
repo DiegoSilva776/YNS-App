@@ -171,17 +171,20 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
 
     $scope.readFile = function(pathToFile) {
         try {
-            window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
-                fileEntry.file(function (file) {
-                    var reader = new FileReader();
-    
-                    reader.onloadend = function (event) {
-                        $scope.updateProfileImage(true, this.result);
-                    };
-    
-                    reader.readAsDataURL(file);
+
+            if (pathToFile != undefined) {
+                window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+        
+                        reader.onloadend = function (event) {
+                            $scope.updateProfileImage(true, this.result);
+                        };
+        
+                        reader.readAsDataURL(file);
+                    });
                 });
-            });
+            }
         } catch(err) {
             log.logMessage(`${TAG} ${msgs.MSG_FAILED_READ_FILE} ${pathToFile}`);   
         }
