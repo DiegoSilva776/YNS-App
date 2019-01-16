@@ -8,26 +8,13 @@
 
   <link rel="manifest" href="manifest.json">
 
-  <!-- un-comment this code to enable service worker
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(() => console.log('service worker installed'))
-          .catch(err => console.log('Error', err));
-      }
-    </script>-->
-
   <link href="lib/ionic/css/ionic.css" rel="stylesheet">
   <link href="css/animations.css" rel="stylesheet">
   <link href="css/globals.css" rel="stylesheet">
   <link href="css/main-page.css" rel="stylesheet">
   <link href="css/notifications-modal.css" rel="stylesheet">
 
-  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-    <link href="css/ionic.app.css" rel="stylesheet">
-    -->
-
-  <!-- project dependencies -->
+  <!-- Project dependencies -->
   <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-storage.js"></script>
@@ -35,20 +22,28 @@
   <script src="lib/cordova/ng-cordova.min.js"></script>
   <script src="cordova.js"></script>
 
-  <!-- your app's js -->
+  <!-- YNS App's js -->
+  <script src="js/app.js"></script>
+
   <script src="js/utils/config-utils.js"></script>
   <script src="js/utils/math-utils.js"></script>
   <script src="js/utils/msg-utils.js"></script>
+  <script src="js/utils/log-utils.js"></script>
+
   <script src="js/services/notification-service.js"></script>
   <script src="js/presenters/notification-presenter.js"></script>
+
   <script src="js/pages/main-page-controller.js"></script>
+  <script src="js/components/image-picker-controller.js"></script>
+  <script src="js/components/notifications-controller.js"></script>
 </head>
 
 <!-- Main Page -->
+
 <body ng-app="YnsApp" ng-controller="MainPageController" class="page">
 
   <div class="page-header">
-    <div class="left-container">
+    <div ng-controller="ImagePickerController" class="left-container">
       <img ng-click="openImagePicker()" id="profile-img" class="profile-img" src="img/ico-profile.svg">
     </div>
     <div class="right-container">
@@ -65,7 +60,7 @@
 <!-- ./Main Page -->
 
 <!-- Notifications Modal -->
-<script id="notifications.html" type="text/ng-template">
+<script ng-controller="NotificationsController" id="notifications.html" type="text/ng-template">
 
   <div class="modal page">
 
@@ -91,6 +86,12 @@
           </div>
         </ion-content>
       </ion-view>
+    </div>
+
+    <div id="empty-list-notifications" class="empty-list-notifications" class="ng-hide" ng-model="msgEmptyList">
+      <h2>{{msgEmptyList.title}}</h2>
+      <ng-bind-html class="description" ng-bind-html="msgEmptyList.msg"></ng-bind-html>
+      <button ng-click="closeNotificationsModal()" class="confirm-button">Got it</button>
     </div>
 
   </div>

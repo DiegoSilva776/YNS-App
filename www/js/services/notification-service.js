@@ -1,9 +1,8 @@
 // dataservice factory
-angular
-    .module('YnsApp.NotificationsService', [
-        'ionic'
-    ])
-    .factory('notificationsService', notificationsService);
+angular.module('YnsApp.NotificationsService', [
+    'ionic'
+])
+.factory('notificationsService', notificationsService);
 
 notificationsService.$inject = ['$http'];
 

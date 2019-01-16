@@ -49,6 +49,12 @@
     border-radius: 35px;
     z-index: 10;
 }
+.list-notifications-item .notification-content {
+    animation-name: expandItemVertically;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    backface-visibility: visible!important
+}
 .list-notifications-item .notification-content,
 .list-notifications-item .notification-content.shrinked,
 .list-notifications-item .notification-content.re-shrinked {
@@ -67,6 +73,11 @@
 .list-notifications-item .notification-content.shrinked,
 .list-notifications-item .notification-content.re-shrinked {
     max-height: 165px;
+
+    animation-name: shrinkItemVertically;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+    backface-visibility: visible!important
 }
 .list-notifications-item .notification-content.re-shrinked {
     opacity: 0.75;
@@ -97,7 +108,8 @@
     border: 1px solid #f0f0f0;
     border-radius: 20px;
 }
-.list-notifications-item .notification-content .confirm-button {
+.list-notifications-item .notification-content .confirm-button,
+.empty-list-notifications .confirm-button {
     display: block;
     position: relative;
     top: 0px;
@@ -112,4 +124,22 @@
     color: #ffffff;
     border: 1px solid rgb(224, 151, 15);
     border-radius: 30px;
+}
+.empty-list-notifications {
+    display: block;
+    position: relative;
+    width: 60vw;
+    height: auto;
+    margin: auto;
+    top: 20vh;
+    text-align: center;
+    padding: 30px;
+    background-color: #ffffff;
+    border: 3px solid #f0f0f0;
+    border-radius: 15px;
+
+    animation-name: slideFromTop;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    backface-visibility: visible!important   
 }

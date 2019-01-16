@@ -1,10 +1,9 @@
 // dataservice factory
-angular
-    .module('YnsApp.NotificationsPresenter', [
-        'ionic',
-        'YnsApp.NotificationsService'
-    ])
-    .factory('notificationsPresenter', notificationsPresenter);
+angular.module('YnsApp.NotificationsPresenter', [
+    'ionic',
+    'YnsApp.NotificationsService'
+])
+.factory('notificationsPresenter', notificationsPresenter);
 
 notificationsPresenter.$inject = ['notificationsService'];
 
@@ -79,22 +78,27 @@ function notificationsPresenter(notificationsService) {
 
                     notificationsService.getUserNotifications(user)
                         .then(function(data) {
-                            userNotifications = data.data.data;
+
+                            try {
+                                userNotifications = data.data.data;
                             
-                            for (var i = 0; i < notifications.length; i++) {
-                                var notification = notifications[i];
-
-                                for (var j = 0; j < userNotifications.length; j++) {
-                                    var userNotification = userNotifications[j];
+                                for (var i = 0; i < notifications.length; i++) {
+                                    var notification = notifications[i];
     
-                                    if (userNotification.user.firebaseUid === user.firebaseUid &&
-                                        userNotification.notification.firebaseUid === notification.firebaseUid) {
-                                        notification.new = false;
-                                    }    
+                                    for (var j = 0; j < userNotifications.length; j++) {
+                                        var userNotification = userNotifications[j];
+        
+                                        if (userNotification.user.firebaseUid === user.firebaseUid &&
+                                            userNotification.notification.firebaseUid === notification.firebaseUid) {
+                                            notification.new = false;
+                                        }    
+                                    }
                                 }
+    
+                                resolve(notifications);
+                            } catch(err) {
+                                reject(false);
                             }
-
-                            resolve(notifications);
                         });
 
                 } catch (err) {

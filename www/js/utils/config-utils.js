@@ -25,6 +25,8 @@ configs.network = {
 configs.files = {
 
     PREFIX_PROFILE_IMGS: "images/profile_",
+
+    NAME_LOCAL_IMAGES_DIRECTORY: "images",
     IMGS_CONTENT_TYPE: "image/jpeg"
 
 }
