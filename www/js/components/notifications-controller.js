@@ -8,15 +8,33 @@
 app.controller('NotificationsController', function ($rootScope, $scope, notificationsPresenter) {
     
     TAG = "NotificationsController";
+
+    /**
+     * Data that is bound to the UI and used locally
+     */
     $scope.hasInitialized = false;
-    $scope.selectors = {
-        notificationModalHeader: "#notification-modal-header",
-        notificationModalBody: "#notification-modal-body"
+    $scope.isThereNewNotification = false;
+    $scope.notifications = [];
+    $scope.msgEmptyList = {
+        title: "Empty list",
+        msg: "There isn't a notification right now, but we'll let you know if something cool happen."
     }
 
-    $rootScope.isThereNewNotification = false;
-    $rootScope.notifications = [];
-
+    /**
+     * Selectors used locally
+     */
+    $scope.selectors = {
+        notificationModalHeader: "#notification-modal-header",
+        notificationModalBody: "#notification-modal-body",
+        msgEmptyList: "#empty-list-notifications",
+        getNotificationId: function (idx) {
+            return "#notification-" + idx;
+        },
+        getNotificationShrinkId: function (idx) {
+            return "#notification-shrink-" + idx;
+        }
+    }
+    
     /**
      * UI Events
      */
@@ -25,8 +43,8 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
             var notification = $scope.getNotificationById(idx);
 
             if (notification !== null) {
-                var notificationId = $rootScope.selectors.getNotificationId(idx);
-                var notifShrinkIndicatorId = $rootScope.selectors.getNotificationShrinkId(idx);
+                var notificationId = $scope.selectors.getNotificationId(idx);
+                var notifShrinkIndicatorId = $scope.selectors.getNotificationShrinkId(idx);
     
                 angular.element(document.querySelector(notificationId)).removeClass($rootScope.classes.shrink);
                 angular.element(document.querySelector(notifShrinkIndicatorId)).addClass($rootScope.classes.hidden);
@@ -72,7 +90,7 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
 
     $scope.shrinkNotification = function (shrink, idx) {
         try {
-            var notificationId = $rootScope.selectors.getNotificationId(idx);
+            var notificationId = $scope.selectors.getNotificationId(idx);
             var el = document.querySelector(notificationId)
 
             if (shrink) {
@@ -109,7 +127,13 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     }
 
     $scope.showEmptyListMsg = function() {
-        $rootScope.isListNotificationsEmpty = $rootScope.notifications.length == 0;
+        var emptyList = angular.element(document.querySelector($scope.selectors.msgEmptyList));
+        
+        if ($rootScope.notifications.length == 0) {
+            emptyList.removeClass($rootScope.classes.hidden);
+        } else {
+            emptyList.addClass($rootScope.classes.hidden);
+        }
     }
 
     $scope.showUnreadNotificatonIndicator = function (show) {
@@ -263,8 +287,8 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     $rootScope.initializeIOS = function() {
         
         if (ionic.Platform.isIOS()) {
-            var modalHeader = angular.element(document.querySelector(`${$scope.selectors.notificationModalHeader}`));
-            var modalBody = angular.element(document.querySelector(`${$scope.selectors.notificationModalBody}`));
+            var modalHeader = angular.element(document.querySelector($scope.selectors.notificationModalHeader));
+            var modalBody = angular.element(document.querySelector($scope.selectors.notificationModalBody));
     
             modalHeader.addClass($rootScope.classes.iOS);
             modalBody.addClass($rootScope.classes.iOS);

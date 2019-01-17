@@ -7,7 +7,7 @@
 app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) {
 
   /**
-   * Data that is bound to the UI
+   * Data that is bound to the UI and used globally
    */
   $rootScope.user = {
     firebaseUid: "-LWNssH8BZ5NX1LKh9Ld",
@@ -16,14 +16,9 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     profilePic: "...",
     latestViewedNotification: ""
   };
-  $rootScope.msgEmptyList = {
-    title: "Empty list",
-    msg: "There isn't a notification right now, but we'll let you know if something cool happen."
-  }
-  $rootScope.isListNotificationsEmpty = true;
 
   /**
-   * Classes and selectors
+   * Classes and selectors used globally
    */
   $rootScope.classes = {
     hidden: "hidden",
@@ -35,20 +30,12 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     flip: "flip",
     iOS: "ios"
   }
-
   $rootScope.selectors = {
     pageHeader: "#page-header",
     pageBody: "#page-body",
     profileImg: "#profile-img",
-    emptyListNotifications: "#empty-list-notifications",
     notificationsImg: "#notifications-img",
-    newNotificationIndicator: "#new-notification-indicator",
-    getNotificationId: function (idx) {
-      return "#notification-" + idx;
-    },
-    getNotificationShrinkId: function (idx) {
-      return "#notification-shrink-" + idx;
-    }
+    newNotificationIndicator: "#new-notification-indicator"
   }
 
   /**
@@ -61,7 +48,7 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     animation: 'scale-in'
   });
 
-  $rootScope.openNotificationsModal = function () {
+  $scope.openNotificationsModal = function () {
     $scope.taskModal.show();
     
     if (ionic.Platform.isIOS()) {
@@ -78,10 +65,14 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
   /**
    * Custom initialization for iOS
    */
-  if (ionic.Platform.isIOS()) {
+  $scope.initializeIOS = function() {
     // Update the UI
     angular.element(document.querySelector($rootScope.selectors.pageHeader)).addClass($rootScope.classes.iOS);
     angular.element(document.querySelector($rootScope.selectors.pageBody)).addClass($rootScope.classes.iOS);
+  }
+
+  if (ionic.Platform.isIOS()) {
+    $scope.initializeIOS();
 
     // TODO: Fix the SSL issue on iOS or implement a web socket on our API to notify about new notifications
     // iOS didn't like the requests created to connect to Firebase due to a SSL certificate issue, so, 
