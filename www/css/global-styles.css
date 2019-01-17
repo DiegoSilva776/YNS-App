@@ -1,7 +1,7 @@
 /**
  * Globals
  */
- .overflow-scroll {
+.overflow-scroll {
     overflow-y: auto;
 }
 
@@ -37,12 +37,16 @@
 }
 .page-header {
     top: 0px;
-    height: 80px;
+    height: 90px;
     background-color: #716d6d80;
     z-index: 10;
 }
+.page-header.ios,
+.page-body.ios {
+    top: 30px !important;
+}
 .page-body {
-    top: -5px;
+    top: 0px;
     height: 100vh;
     padding: 50px;
 }
@@ -67,18 +71,4 @@
     float: right;
     right: 0px;
     top: 0px;
-}
-
-/**
- * Main Page and Notifications Modal
- */
-.profile-img,
-.notifications-img,
-.unread-notification-indicator,
-.back-img {
-    position: relative;
-    display: block;
-    float: left;
-    left: 0px;
-    top: -6px;
 }

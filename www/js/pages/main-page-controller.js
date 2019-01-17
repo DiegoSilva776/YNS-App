@@ -10,15 +10,17 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
    * Data that is bound to the UI
    */
   $rootScope.user = {
-    email: "yns.user.1@email.com",
-    name: "John Doe",
-    profilePic: "file:///storage/emulated/0/images/undefined.jpg",
-    latestNotification: "..."
+    firebaseUid: "-LWNssH8BZ5NX1LKh9Ld",
+    email: "john.lenon@email.com",
+    name: "John Lenon",
+    profilePic: "...",
+    latestViewedNotification: ""
   };
   $rootScope.msgEmptyList = {
     title: "Empty list",
-    msg: "There isn't a notification right now, but we'll let you know if something cool happens."
+    msg: "There isn't a notification right now, but we'll let you know if something cool happen."
   }
+  $rootScope.isListNotificationsEmpty = true;
 
   /**
    * Classes and selectors
@@ -30,11 +32,14 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     noNewMsgs: "no-new-msgs",
     withImg: "with-img",
     shake: "shake-item",
-    flip: "flip"
+    flip: "flip",
+    iOS: "ios"
   }
 
   $rootScope.selectors = {
-    profileImgId: "profile-img",
+    pageHeader: "#page-header",
+    pageBody: "#page-body",
+    profileImg: "#profile-img",
     emptyListNotifications: "#empty-list-notifications",
     notificationsImg: "#notifications-img",
     newNotificationIndicator: "#new-notification-indicator",
@@ -56,13 +61,36 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     animation: 'scale-in'
   });
 
-  $scope.openNotificationsModal = function () {
+  $rootScope.openNotificationsModal = function () {
     $scope.taskModal.show();
+    
+    if (ionic.Platform.isIOS()) {
+      $rootScope.initializeIOS();
+      $rootScope.getListNotifications($rootScope.user);
+    }
   };
 
   $rootScope.closeNotificationsModal = function () {
     $scope.taskModal.hide();
     $rootScope.updateStatusNotifications();
   };
+
+  /**
+   * Custom initialization for iOS
+   */
+  if (ionic.Platform.isIOS()) {
+    // Update the UI
+    angular.element(document.querySelector($rootScope.selectors.pageHeader)).addClass($rootScope.classes.iOS);
+    angular.element(document.querySelector($rootScope.selectors.pageBody)).addClass($rootScope.classes.iOS);
+
+    // TODO: Fix the SSL issue on iOS or implement a web socket on our API to notify about new notifications
+    // iOS didn't like the requests created to connect to Firebase due to a SSL certificate issue, so, 
+    // until a web socket is implemented on the API responsible for delivering the notifications, 
+    // the 'startNotificationsWatcher', which regularly pulls resources from the API in a specific 
+    // interval, could be a solution.
+    setTimeout(function() {
+      $rootScope.startNotificationsWatcher();
+    }, 2000);
+  }
 
 });

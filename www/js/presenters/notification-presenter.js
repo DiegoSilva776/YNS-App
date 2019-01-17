@@ -58,6 +58,7 @@ function notificationsPresenter(notificationsService) {
                     data = data.data.data;
                     
                     for (var i = 0; i < data.length; i++) {
+                        // Show only schedule notifications
                         var notification = data[i];
                         notification.new = true;
 
@@ -73,6 +74,12 @@ function notificationsPresenter(notificationsService) {
                             notifications.sort(function(a, b) {
                                 return new Date(b.scheduleTime) - new Date(a.scheduleTime);
                             });
+                        }
+
+                        // Ensure images are going to show up on iOS
+                        // TODO: Figure out a solution for the SSL issue that is currently happening on iOS
+                        if (ionic.Platform.isIOS()) {
+                            notification.body = notification.body.replace("https://", "http://");
                         }
                     }
 

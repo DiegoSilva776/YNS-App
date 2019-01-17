@@ -16,8 +16,15 @@ configs.network = {
         messagingSenderId: "189050028188"
     },
 
+    TIMEOUT_WATCH_NOTIFICATIONS: 60000,
+
     init: function() {
         firebase.initializeApp(this.FIREBASE_CONFIGS);
+
+        if (ionic.Platform.isIOS()) {
+            this.BASE_URL_NOTIFICATIONS_API = this.BASE_URL_NOTIFICATIONS_API.replace("https", "http");
+            this.FIREBASE_CONFIGS.databaseURL = this.this.FIREBASE_CONFIGS.databaseURL.replace("https", "http");
+        }
     }
 
 }

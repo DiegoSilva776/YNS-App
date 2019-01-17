@@ -2,6 +2,11 @@
  * Notifications Modal
  */
 .back-img {
+    position: relative;
+    display: block;
+    float: left;
+    left: 0px;
+    top: -6px;
     width: 32px;
     height: 32px;
     opacity: 1;

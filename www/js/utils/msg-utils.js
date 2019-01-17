@@ -10,7 +10,7 @@ var msgs = {
     MSG_FAILED_READ_FILE: "Failed to read file",
 
     // Notifications
-    MSG_FAILED_LISTEN_NEW_NOTIFICATIONS : "There was a problem connecting to the notification's service, you might receive new notifications",
+    MSG_FAILED_LISTEN_NEW_NOTIFICATIONS : "Failed to listenNewNotifications",
     MSG_FAILED_LOAD_NOTIFICATIONS : "There was a problem loading your notifications",
     MSG_FAILED_UPSERT_USER_NOTIFICATION_REL: "There was a problem with your registration, you might face problems on updating the status of new notifications.",
     MSG_FAILED_EXPAND_LIST_ITEM: "Failed to expandListItem",
@@ -18,6 +18,7 @@ var msgs = {
     MSG_FAILED_CLOSE_MSG_CARD: "Failed to closeMsg",
     MSG_FAILED_SHRINK_NOTIFICATION: "Failed to shrinkNotification",
     MSG_FAILED_UPDATE_NOTIFICATIONS: "Failed to updateStatusNotifications",
-    MSG_FAILED_SHOW_UNREAD_NOTIFICATIONS: "Failed to showUnreadNotificatonIndicator"
+    MSG_FAILED_SHOW_UNREAD_NOTIFICATIONS: "Failed to showUnreadNotificatonIndicator",
+    MSG_START_NOTIFICATION_WATCHER: "startNotificationsWatcher ...:"
 
 }

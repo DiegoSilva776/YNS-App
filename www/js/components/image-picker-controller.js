@@ -43,50 +43,60 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
 
     $rootScope.openImagePicker = function() {
 
-        $cordovaImagePicker.getPictures({
-            maximumImagesCount: 10,
-            width: 800,
-            height: 800,
-            quality: 80,
-            outputType: window.imagePicker.OutputType.BASE64_STRING
-        })
-            .then(function (results) {
-
-                try {
-
-                    for (var i = 0; i < results.length; i++) {
-                        var imgBase64Str = results[i];
-
-                        var imgFilename = `${$rootScope.user.firebaseUid}.jpg`;
-                        var cloudImgFilename = `${configs.files.PREFIX_STORAGE_PROFILE_IMGS}${imgFilename}`;
-                        var contentType = configs.files.IMGS_CONTENT_TYPE;
-
-                        var storageRef = firebase.storage().ref();
-                        var mountainImagesRef = storageRef.child(cloudImgFilename);
-
-                        mountainImagesRef.putString(imgBase64Str, 'base64').then(function (snapshot) {
-
-                            if (snapshot != undefined && snapshot != null) {
-
-                                if (snapshot.state == "success") {
-                                    snapshot.ref.getDownloadURL().then(function (downloadURL) {
-                                        $rootScope.user.profilePic = downloadURL;
-                                        $rootScope.registerUserOnNotificationAPI($rootScope.user);
-                                        $scope.updateProfileImage(false, $rootScope.user.profilePic);
-                                        $scope.savebase64AsFile($scope.imagesDirectory, imgFilename, imgBase64Str, contentType);
-                                        $scope.readFile($rootScope.user.localProfilePic);
-                                    });
-                                }
+        if (window.imagePicker != undefined) {
+            $cordovaImagePicker.getPictures({
+                maximumImagesCount: 10,
+                width: 800,
+                height: 800,
+                quality: 80,
+                outputType: window.imagePicker.OutputType.BASE64_STRING
+            })
+                .then(function (results) {
+    
+                    try {
+    
+                        for (var i = 0; i < results.length; i++) {
+                            var imgBase64Str = results[i];
+    
+                            var imgFilename = `${$rootScope.user.firebaseUid}.jpg`;
+                            var cloudImgFilename = `${configs.files.PREFIX_PROFILE_IMGS}${imgFilename}`;
+                            var contentType = configs.files.IMGS_CONTENT_TYPE;
+    
+                            if (firebase != undefined) {
+                                var storageRef = firebase.storage().ref();
+                                var mountainImagesRef = storageRef.child(cloudImgFilename);
+        
+                                mountainImagesRef.putString(imgBase64Str, 'base64').then(function (snapshot) {
+        
+                                    if (snapshot != undefined && snapshot != null) {
+        
+                                        if (snapshot.state == "success") {
+                                            snapshot.ref.getDownloadURL().then(function (downloadURL) {
+                                                $rootScope.user.profilePic = downloadURL;
+                                                $rootScope.registerUserOnNotificationAPI($rootScope.user);
+                                                $scope.updateProfileImage(false, $rootScope.user.profilePic);
+                                                $scope.savebase64AsFile($scope.imagesDirectory, imgFilename, imgBase64Str, contentType);
+                                                $scope.readFile($rootScope.user.localProfilePic);
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
+    
+                                $scope.updateProfileImage(false, $rootScope.user.profilePic);
+                                $scope.savebase64AsFile($scope.imagesDirectory, imgFilename, imgBase64Str, contentType);
+                                $scope.readFile($rootScope.user.localProfilePic);
                             }
-                        });
+                        }
+                    } catch(err) {
+                        log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
                     }
-                } catch(err) {
+                }, function (err) {
                     log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
-                }
-            }, function (err) {
-                log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
-                $scope.adjustImgForAvatar(true);
-            });
+                    $scope.adjustImgForAvatar(true);
+                });
+        }
     }
 
     $scope.updateProfileImage = function(fromLocalStorage, imgUrlOrStrBase64) {
@@ -94,9 +104,9 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
         try {
 
             if (fromLocalStorage) {
-                document.getElementById($rootScope.selectors.profileImgId).src = imgUrlOrStrBase64;
+                document.getElementById($rootScope.selectors.profileImg.replace("#", "")).src = imgUrlOrStrBase64;
             } else {
-                angular.element(document.getElementById($rootScope.selectors.profileImgId)).attr("src", imgUrlOrStrBase64);
+                angular.element(document.querySelector($rootScope.selectors.profileImg)).attr("src", imgUrlOrStrBase64);
             }
 
             $scope.adjustImgForAvatar(false);
@@ -111,12 +121,12 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
         try {
 
             if (adjustIt) {
-                angular.element(document.getElementById($rootScope.selectors.profileImgId)).removeClass($rootScope.classes.withImg);
+                angular.element(document.querySelector($rootScope.selectors.profileImg)).removeClass($rootScope.classes.withImg);
             } else {
-                angular.element(document.getElementById($rootScope.selectors.profileImgId)).addClass($rootScope.classes.withImg);
+                angular.element(document.querySelector($rootScope.selectors.profileImg)).addClass($rootScope.classes.withImg);
             }
 
-            angular.element(document.getElementById($rootScope.selectors.profileImgId)).addClass($rootScope.classes.flip);
+            angular.element(document.querySelector($rootScope.selectors.profileImg)).addClass($rootScope.classes.flip);
 
         } catch(err) {
             log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);

@@ -1,7 +1,17 @@
 /**
  * Main Page
  */
- .profile-img {
+.profile-img,
+.notifications-img,
+.unread-notification-indicator {
+    position: relative;
+    display: block;
+    float: left;
+    left: 0px;
+    top: -6px;
+}
+
+.profile-img {
     width: 50px;
     height: 50px;
     padding-top: 9px;

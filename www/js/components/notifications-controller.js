@@ -9,6 +9,11 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     
     TAG = "NotificationsController";
     $scope.hasInitialized = false;
+    $scope.selectors = {
+        notificationModalHeader: "#notification-modal-header",
+        notificationModalBody: "#notification-modal-body"
+    }
+
     $rootScope.isThereNewNotification = false;
     $rootScope.notifications = [];
 
@@ -34,6 +39,7 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
 
     $scope.getNotificationById = function (id) {
         try {
+
             for (var i = 0; i < $rootScope.notifications.length; i++) {
                 var notification = $rootScope.notifications[i];
 
@@ -91,6 +97,7 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                     $scope.isThereNewNotification = true;
                 } else {
                     $scope.shrinkNotification(true, notification.firebaseUid);
+                    $rootScope.user.latestViewedNotification = notification.firebaseUid;
                 }
             }
 
@@ -129,6 +136,10 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     $scope.initPresenters = function () {
         $rootScope.registerUserOnNotificationAPI();
         $scope.listenNewNotifications();
+
+        if (ionic.Platform.isIOS()) {
+            $rootScope.getListNotifications($rootScope.user);
+        }
     }
 
     $rootScope.registerUserOnNotificationAPI = function () {
@@ -140,9 +151,9 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
 
                 try {
 
-                    if (user) {
+                    if (user != undefined) {
                         $rootScope.user = user;
-                        $scope.getListNotifications($rootScope.user);
+                        $rootScope.getListNotifications($rootScope.user);
                     } else {
                         log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL}`);
                     }
@@ -156,26 +167,46 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
 
     $scope.listenNewNotifications = function () {
         try {
-            var notificationsRef = firebase.database().ref("notifications/");
-            notificationsRef.on('value', function (snapshot) {
 
-                try {
-
-                    if ($rootScope.user.firebaseUid != undefined) {
-                        $scope.getListNotifications($rootScope.user)
-                    } else {
-                        $rootScope.registerUserOnNotificationAPI();
+            if (firebase != undefined) {
+                var notificationsRef = firebase.database().ref("notifications/");
+                notificationsRef.on('value', function (snapshot) {
+    
+                    try {
+    
+                        if ($rootScope.user.firebaseUid != undefined) {
+                            $rootScope.getListNotifications($rootScope.user)
+                        } else {
+                            $rootScope.registerUserOnNotificationAPI();
+                        }
+                    } catch(err) {
+                        log.logMessage(`${TAG} ${msgs.MSG_FAILED_LISTEN_NEW_NOTIFICATIONS} ${err}`);
                     }
-                } catch(err) {
-                    log.logMessage(`${TAG} ${msgs.MSG_FAILED_LISTEN_NEW_NOTIFICATIONS} ${err}`);
+                });
+            } else {
+
+                if ($rootScope.user.firebaseUid != undefined) {
+                    $rootScope.getListNotifications($rootScope.user)
+                } else {
+                    $rootScope.registerUserOnNotificationAPI();
                 }
-            });
+            }
         } catch (err) {
             log.logMessage(`${TAG} ${msgs.MSG_FAILED_LISTEN_NEW_NOTIFICATIONS} ${err}`);
         }
     }
 
-    $scope.getListNotifications = function (user) {
+    $rootScope.startNotificationsWatcher = function() {
+        setTimeout(function() {
+            log.logMessage(`${TAG} ${msgs.MSG_START_NOTIFICATION_WATCHER} ${new Date()}`);
+
+            $rootScope.getListNotifications($rootScope.user);
+            $rootScope.startNotificationsWatcher();
+
+        }, configs.network.TIMEOUT_WATCH_NOTIFICATIONS);
+    }
+
+    $rootScope.getListNotifications = function (user) {
         notificationsPresenter.getListNotifications(user)
             .then(function (updatedNotifications) {
 
@@ -224,11 +255,28 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                 log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL} ${err}`);
             });
     }
+    // ./Connection to data services
 
+    /**
+     * Custom initialization for iOS
+     */
+    $rootScope.initializeIOS = function() {
+        
+        if (ionic.Platform.isIOS()) {
+            var modalHeader = angular.element(document.querySelector(`${$scope.selectors.notificationModalHeader}`));
+            var modalBody = angular.element(document.querySelector(`${$scope.selectors.notificationModalBody}`));
+    
+            modalHeader.addClass($rootScope.classes.iOS);
+            modalBody.addClass($rootScope.classes.iOS);
+        }
+    }
+
+    /**
+     * Global initialization
+     */
     if (!$scope.hasInitialized) {
         $scope.hasInitialized = true;
         $scope.initPresenters();
     }
-    // ./Connection to data services
 
 })

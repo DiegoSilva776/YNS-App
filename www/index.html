@@ -10,17 +10,18 @@
 
   <link href="lib/ionic/css/ionic.css" rel="stylesheet">
   <link href="css/animations.css" rel="stylesheet">
-  <link href="css/globals.css" rel="stylesheet">
+  <link href="css/global-styles.css" rel="stylesheet">
   <link href="css/main-page.css" rel="stylesheet">
   <link href="css/notifications-modal.css" rel="stylesheet">
 
   <!-- Project dependencies -->
-  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/5.7.2/firebase-storage.js"></script>
   <script src="lib/ionic/js/ionic.bundle.js"></script>
   <script src="lib/cordova/ng-cordova.min.js"></script>
   <script src="cordova.js"></script>
+
+  <script src="lib/firebase/firebase-app.js"></script>
+  <script src="lib/firebase/firebase-database.js"></script>
+  <script src="lib/firebase/firebase-storage.js"></script>
 
   <!-- YNS App's js -->
   <script src="js/app.js"></script>
@@ -39,10 +40,9 @@
 </head>
 
 <!-- Main Page -->
-
 <body ng-app="YnsApp" ng-controller="MainPageController" class="page">
 
-  <div class="page-header">
+  <div id="page-header" class="page-header">
     <div ng-controller="ImagePickerController" class="left-container">
       <img ng-click="openImagePicker()" id="profile-img" class="profile-img" src="img/ico-profile.svg">
     </div>
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <div class="page-body">
+  <div id="page-body" class="page-body">
     <!-- ... -->
   </div>
 
@@ -64,13 +64,13 @@
 
   <div class="modal page">
 
-    <div class="page-header">
+    <div id="notification-modal-header" class="page-header notification-modal-header">
       <div class="left-container">
         <img ng-click="closeNotificationsModal()" class="back-img enabled" src="img/ico-left-arrow.svg">
       </div>
     </div>
 
-    <div class="page-body">
+    <div id="notification-modal-body" class="page-body notification-modal-body">
       <ion-view>
         <ion-content overflow-scroll="true">
           <div class="list list-notifications" >
