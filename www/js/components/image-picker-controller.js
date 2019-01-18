@@ -39,7 +39,7 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
                     }
                 }
 
-            }).catch(function (error) {
+            }).catch(function (err) {
                 log.logMessage(`${TAG} ${msgs.MSG_FAILED_CREATE_IMGS_DIRECTORY} ${err}`);
             });
 
@@ -70,16 +70,17 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
 
         if (window.imagePicker != undefined) {
             $cordovaImagePicker.getPictures({
-                maximumImagesCount: 10,
+                maximumImagesCount: 1,
                 width: 800,
                 height: 800,
                 quality: 80,
                 outputType: window.imagePicker.OutputType.BASE64_STRING
-            })
-                .then(function (results) {
+            }).then(function(results) {
 
-                    try {
-                        var base64String = results[0];
+                try {
+                    var base64String = results[0];
+                        console.log(base64String);
+
                         var localImgFile = `${$rootScope.user.email.replace("@", "_")}_`;
                         localImgFile += configs.files.PART_ID_AVATAR_PICS;
                         localImgFile += configs.files.UPLOADED_IMGS_EXTENSION;
@@ -114,10 +115,10 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
                     } catch (err) {
                         log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
                     }
-                }).catch(function (err) {
+            }).catch(function (err) {
                     log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
                     $scope.adjustImgForAvatar(true);
-                });
+            });
         }
     }
 
@@ -133,7 +134,9 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
         } catch (err) {
             log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
 
-            $scope.loadProfilePicture(fromLocalStorage, imgUrlOrFile);
+            if (imgUrlOrFile != undefined) {
+                $scope.loadProfilePicture(fromLocalStorage, imgUrlOrFile);
+            }
         }
     }
 
@@ -180,9 +183,9 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
             $cordovaFile.checkDir($scope.storageDirectory, "images")
             .then(function (success) {
 
-                $cordovaFile.createFile($scope.storageDirectory, filename, true)
+                $cordovaFile.createFile($scope.storageDirectory + "images", filename, true)
                 .then(function (success) {
-                    $scope.savebase64AsFile($scope.storageDirectory, filename, base64String, configs.files.IMGS_CONTENT_TYPE);
+                    $scope.savebase64AsFile($scope.storageDirectory + "images", filename, base64String, configs.files.IMGS_CONTENT_TYPE);
 
                 }).catch(function (err) {
                     log.logMessage(`${TAG} Failed to store image using the default file system: ${err}`);
@@ -209,6 +212,7 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
                     fileWriter.onwrite = function () {
                         $rootScope.user.localProfilePic = `${directory}/${filename}`;
                         $rootScope.upsertUserOnNotificationAPI();
+                        $scope.loadProfileImageFromCacheFileSystem($rootScope.user.localProfilePic);
                     }
                     fileWriter.write(dataBlob);
 
@@ -257,19 +261,29 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
             if (fullFilePath != undefined) {
                 var urlParts = fullFilePath.split("/");
                 var filename = urlParts[urlParts.length - 1];
-    
+
                 if ($scope.storageDirectory == "" || $scope.storageDirectory == undefined) {
-    
-                    if (ionic.Platform.isIOS()) {
-                        appStorageDirectory = cordova.file.applicationDirectory;
-                    } else {
-                        appStorageDirectory = cordova.file.applicationStorageDirectory;
-                    }
+                    $scope.initBaseDirectory();
                 }
     
-                var file = $cordovaFile.readAsDataURL(directory, filename);
-    
-                $scope.updateProfileImage(true, file);
+                var pathToFile = `${$scope.storageDirectory}${filename}`;
+
+                window.resolveLocalFileSystemURL(pathToFile, function (fileEntry) {
+
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+                        reader.onloadend = function (e) {
+                            $scope.updateProfileImage(true, this.result);
+                        };
+                        reader.readAsDataURL(file);
+
+                    }, function(err) {
+                        log.logMessage(`${TAG} ${msgs.MSG_FAILED_READ_FILE} ${err}`);
+                    });
+
+                }, function(err) {
+                    log.logMessage(`${TAG} ${msgs.MSG_FAILED_READ_FILE} ${err}`);
+                });
             }
 
         } catch (err) {

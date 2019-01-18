@@ -7,7 +7,7 @@ var msgs = {
     MSG_FAILED_UPLOAD_PROFILE_PIC: "Failed to load image into the avatar element: ",
     MSG_FAILED_SAVE_64S_FILE: "Unable to 64 as file in path",
     MSG_FAILED_SAVE_64S_BLOB: "Failed to b64toBlob",
-    MSG_FAILED_READ_FILE: "Failed to read file",
+    MSG_FAILED_READ_FILE: "Failed to loadProfileImageFromCacheFileSystem",
 
     // Notifications
     MSG_FAILED_LISTEN_NEW_NOTIFICATIONS : "Failed to listenNewNotifications",
