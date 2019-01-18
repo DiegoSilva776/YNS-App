@@ -5,6 +5,12 @@ YNS App is just an MVP used to display two features that make use of the YNS API
   - > Allow the user to update the profile image, by selecting a picture on the images gallery and uploading this picture to a Cloud Storage solution as well as in the device.
   - > Create an in-app notification system that reads new notifications from a remote URL.
 
+
+# Running the apps
+
+- > To build the Android and iOS projects, using the configuration files required by the Firebase native SDKs, please reach me out on the email available in my profile here on Github.
+
+
 # Challenges I've encountered during development
 
   - > Solving the CORS issue:
@@ -374,5 +380,3 @@ https://gonehybrid.com/how-to-write-automated-tests-for-your-ionic-app-part-2/
 https://gonehybrid.com/how-to-write-automated-tests-for-your-ionic-app-part-3/
 https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
 ```
-
-- > To build the Android and iOS projects, using the configuration files required by the Firebase native SDKs, please reach me out on the email available in my profile here on Github.
