@@ -12,7 +12,6 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     /**
      * Data that is bound to the UI and used locally
      */
-    $scope.hasInitialized = false;
     $scope.isThereNewNotification = false;
     $scope.notifications = [];
     $scope.msgEmptyList = {
@@ -158,19 +157,22 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
      * Connection to data services
      */
     $scope.initPresenters = function () {
-        $rootScope.registerUserOnNotificationAPI();
-        $scope.listenNewNotifications();
-
-        if (ionic.Platform.isIOS()) {
+        notificationsPresenter.getUser($rootScope.user.email)
+        .then(function(user) {
+            $rootScope.user = user;
             $rootScope.getListNotifications($rootScope.user);
-        }
+            $rootScope.updateProfileImage(false, $rootScope.user.profilePic);
+            $scope.listenNewNotifications();
+        }).catch(function(err) {
+            $rootScope.upsertUserOnNotificationAPI();
+        });
     }
 
-    $rootScope.registerUserOnNotificationAPI = function () {
+    $rootScope.upsertUserOnNotificationAPI = function () {
         notificationsPresenter.upsertUser($rootScope.user.email,
             $rootScope.user.name,
             $rootScope.user.profilePic,
-            $rootScope.user.latestNotification)
+            $rootScope.user.latestViewedNotification)
             .then(function (user) {
 
                 try {
@@ -182,7 +184,7 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                         log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL}`);
                     }
                 } catch(err) {
-                    log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL}`);
+                    log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL} ${err}`);
                 }
             }).catch(function (err) {
                 log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPSERT_USER_NOTIFICATION_REL} ${err}`);
@@ -201,7 +203,7 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                         if ($rootScope.user.firebaseUid != undefined) {
                             $rootScope.getListNotifications($rootScope.user)
                         } else {
-                            $rootScope.registerUserOnNotificationAPI();
+                            $rootScope.upsertUserOnNotificationAPI();
                         }
                     } catch(err) {
                         log.logMessage(`${TAG} ${msgs.MSG_FAILED_LISTEN_NEW_NOTIFICATIONS} ${err}`);
@@ -212,7 +214,7 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                 if ($rootScope.user.firebaseUid != undefined) {
                     $rootScope.getListNotifications($rootScope.user)
                 } else {
-                    $rootScope.registerUserOnNotificationAPI();
+                    $rootScope.upsertUserOnNotificationAPI();
                 }
             }
         } catch (err) {
@@ -298,9 +300,6 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     /**
      * Global initialization
      */
-    if (!$scope.hasInitialized) {
-        $scope.hasInitialized = true;
-        $scope.initPresenters();
-    }
+    $scope.initPresenters();
 
 })

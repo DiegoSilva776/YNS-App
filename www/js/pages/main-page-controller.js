@@ -13,7 +13,8 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     firebaseUid: "-LWNssH8BZ5NX1LKh9Ld",
     email: "john.lenon@email.com",
     name: "John Lenon",
-    profilePic: "...",
+    profilePic: "img/ico-profile.svg",
+    localProfilePic: "john.lenon_email.com_avatar.jpg",
     latestViewedNotification: ""
   };
 
@@ -65,14 +66,10 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
   /**
    * Custom initialization for iOS
    */
-  $scope.initializeIOS = function() {
+  if (ionic.Platform.isIOS()) {
     // Update the UI
     angular.element(document.querySelector($rootScope.selectors.pageHeader)).addClass($rootScope.classes.iOS);
     angular.element(document.querySelector($rootScope.selectors.pageBody)).addClass($rootScope.classes.iOS);
-  }
-
-  if (ionic.Platform.isIOS()) {
-    $scope.initializeIOS();
 
     // TODO: Fix the SSL issue on iOS or implement a web socket on our API to notify about new notifications
     // iOS didn't like the requests created to connect to Firebase due to a SSL certificate issue, so, 
@@ -83,5 +80,9 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
       $rootScope.startNotificationsWatcher();
     }, 2000);
   }
+
+  setTimeout(function() {
+    $rootScope.initImagePicker();
+  }, 3000);
 
 });

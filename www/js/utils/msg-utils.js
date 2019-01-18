@@ -19,6 +19,10 @@ var msgs = {
     MSG_FAILED_SHRINK_NOTIFICATION: "Failed to shrinkNotification",
     MSG_FAILED_UPDATE_NOTIFICATIONS: "Failed to updateStatusNotifications",
     MSG_FAILED_SHOW_UNREAD_NOTIFICATIONS: "Failed to showUnreadNotificatonIndicator",
-    MSG_START_NOTIFICATION_WATCHER: "startNotificationsWatcher ...:"
+    MSG_START_NOTIFICATION_WATCHER: "startNotificationsWatcher ...:",
+
+    // Image Picker
+    MSG_FAILED_STORE_PICTURE: "There was a problem saving your profile picture.",
+    MSG_FAILED_STORE_PICTURE_LOCALLY: "There was a problem saving your profile picture locally."
 
 }

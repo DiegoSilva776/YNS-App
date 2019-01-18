@@ -89,6 +89,8 @@
         <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="We need access to your gallery to upload a profile image" />
     </plugin>
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <plugin name="cordova-sqlite-storage" spec="2.6.0" />
+    <plugin name="cordova-plugin-file" spec="6.0.1" />
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="7.1.4" />
 </widget>

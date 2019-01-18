@@ -8,7 +8,8 @@
 var app = angular.module('YnsApp', [
   'ionic',
   'ngCordova',
-  'YnsApp.NotificationsPresenter'
+  'YnsApp.NotificationsPresenter',
+  'YnsApp.StorageService'
 ]);
 
 app.run(function ($ionicPlatform) {
@@ -30,3 +31,7 @@ app.run(function ($ionicPlatform) {
     }
   });
 })
+
+app.config(function($ionicConfigProvider){
+  $ionicConfigProvider.views.maxCache(0);
+});

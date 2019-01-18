@@ -19,11 +19,12 @@ configs.network = {
     TIMEOUT_WATCH_NOTIFICATIONS: 60000,
 
     init: function() {
-        firebase.initializeApp(this.FIREBASE_CONFIGS);
 
         if (ionic.Platform.isIOS()) {
             this.BASE_URL_NOTIFICATIONS_API = this.BASE_URL_NOTIFICATIONS_API.replace("https", "http");
             this.FIREBASE_CONFIGS.databaseURL = this.this.FIREBASE_CONFIGS.databaseURL.replace("https", "http");
+        } else {
+            firebase.initializeApp(this.FIREBASE_CONFIGS);
         }
     }
 
@@ -32,9 +33,10 @@ configs.network = {
 configs.files = {
 
     PREFIX_PROFILE_IMGS: "images/profile_",
-
     NAME_LOCAL_IMAGES_DIRECTORY: "images",
-    IMGS_CONTENT_TYPE: "image/jpeg"
+    IMGS_CONTENT_TYPE: "image/jpeg",
+    PART_ID_AVATAR_PICS: "avatar",
+    UPLOADED_IMGS_EXTENSION: ".jpg"
 
 }
 

@@ -32,8 +32,10 @@
   <script src="js/utils/log-utils.js"></script>
 
   <script src="js/services/notification-service.js"></script>
-  <script src="js/presenters/notification-presenter.js"></script>
+  <script src="js/services/storage-service.js"></script>
 
+  <script src="js/presenters/notification-presenter.js"></script>
+  
   <script src="js/pages/main-page-controller.js"></script>
   <script src="js/components/image-picker-controller.js"></script>
   <script src="js/components/notifications-controller.js"></script>
@@ -44,7 +46,7 @@
 
   <div id="page-header" class="page-header">
     <div ng-controller="ImagePickerController" class="left-container">
-      <img ng-click="openImagePicker()" id="profile-img" class="profile-img" src="img/ico-profile.svg">
+      <img ng-click="openImagePicker()" cache-view="false" id="profile-img" class="profile-img" src="img/ico-profile.svg">
     </div>
     <div class="right-container">
       <img ng-click="openNotificationsModal()" id="notifications-img" class="notifications-img" src="img/ico-notification.svg">
