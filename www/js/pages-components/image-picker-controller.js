@@ -48,6 +48,9 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
         }
     }
 
+    /**
+     * http://ngcordova.com/docs/plugins/file/
+     */
     $scope.initBaseDirectory = function () {
         try {
             var appStorageDirectory = "";
@@ -66,7 +69,6 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
     }
 
     $rootScope.openImagePicker = function () {
-        $ionicHistory.clearCache();
 
         if (window.imagePicker != undefined) {
             $cordovaImagePicker.getPictures({
