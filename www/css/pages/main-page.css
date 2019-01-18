@@ -1,6 +1,17 @@
 /**
  * Main Page
  */
+.profile-img-container {
+    display: block;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+    border: 2px solid #ffffff;
+    border-radius: 50px;
+}
 .profile-img,
 .notifications-img,
 .unread-notification-indicator {
@@ -14,6 +25,7 @@
 .profile-img {
     width: 50px;
     height: 50px;
+    left: -3px;
     padding-top: 9px;
     border: 3px solid #ffffff;
     border-radius: 50px;
@@ -26,11 +38,21 @@
     width: 50px;
     height: 50px;
     border: 2px solid #f0f0f0;
-    border-radius: 55px;
+    border-radius: 50px;
 
     animation-name: flip50PxElementHorizontally;
     animation-duration: .75s;
     animation-fill-mode: forwards;
+    -webkit-animation-name: flip50PxElementHorizontally;
+    -webkit-animation-duration: .75s;
+    -webkit-animation-fill-mode: forwards;
+    -ms-animation-name: flip50PxElementHorizontally;
+    -ms-animation-duration: .75s;
+    -ms-animation-fill-mode: forwards;
+    -moz-animation-name: flip50PxElementHorizontally;
+    -moz-animation-duration: .75s;
+    -moz-animation-fill-mode: forwards;
+    -webkit-backface-visibility: visible!important;
     backface-visibility: visible!important
 }
 .notifications-img,

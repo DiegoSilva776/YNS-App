@@ -154,6 +154,9 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
                     $scope.adjustImgForAvatar(true);
                 }
             }
+
+            angular.element(document.querySelector($rootScope.selectors.profileImg)).css("border-radius", "50px");
+
         } catch (err) {
             log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
         }
@@ -170,6 +173,13 @@ app.controller('ImagePickerController', function ($rootScope, $scope, $cordovaIm
             }
 
             angular.element(document.querySelector($rootScope.selectors.profileImg)).addClass($rootScope.classes.flip);
+
+            if (ionic.Platform.isIOS()) {
+                setTimeout(function() {
+                    angular.element(document.querySelector($rootScope.selectors.profileImg)).removeClass($rootScope.classes.flip);
+                    angular.element(document.querySelector($rootScope.selectors.profileImg)).addClass($rootScope.classes.flip);
+                }, 1000);    
+            }
 
         } catch (err) {
             log.logMessage(`${TAG} ${msgs.MSG_FAILED_UPLOAD_PROFILE_PIC} ${err}`);
