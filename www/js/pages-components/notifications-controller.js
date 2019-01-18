@@ -10,11 +10,15 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
     TAG = "NotificationsController";
 
     /**
+     * Data bound to the UI and is visible to other controllers
+     */
+    $rootScope.notifications = [];
+
+    /**
      * Data that is bound to the UI and used locally
      */
     $scope.isThereNewNotification = false;
-    $scope.notifications = [];
-    $scope.msgEmptyList = {
+    $rootScope.msgEmptyList = {
         title: "Empty list",
         msg: "There isn't a notification right now, but we'll let you know if something cool happen."
     }
@@ -157,12 +161,16 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
      * Connection to data services
      */
     $scope.initPresenters = function () {
+
+        if (ionic.Platform.isAndroid()) {
+            $scope.listenNewNotifications();
+        }
+
         notificationsPresenter.getUser($rootScope.user.email)
         .then(function(user) {
             $rootScope.user = user;
             $rootScope.getListNotifications($rootScope.user);
             $rootScope.updateProfileImage(false, $rootScope.user.profilePic);
-            $scope.listenNewNotifications();
         }).catch(function(err) {
             $rootScope.upsertUserOnNotificationAPI();
         });
@@ -250,12 +258,15 @@ app.controller('NotificationsController', function ($rootScope, $scope, notifica
                         
                     } else {
                         log.logMessage(`${TAG} ${msgs.MSG_FAILED_LOAD_NOTIFICATIONS}`);
+                        $scope.showEmptyListMsg();
                     }
                 } catch(err) {
                     log.logMessage(`${TAG} ${msgs.MSG_FAILED_LOAD_NOTIFICATIONS} ${err}`);
+                    $scope.showEmptyListMsg();
                 }
             }).catch(function (err) {
                 log.logMessage(`${TAG} ${msgs.MSG_FAILED_LOAD_NOTIFICATIONS} ${err}`);
+                $scope.showEmptyListMsg();
             });
     }
 

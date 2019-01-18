@@ -36,7 +36,32 @@ configs.files = {
     NAME_LOCAL_IMAGES_DIRECTORY: "images",
     IMGS_CONTENT_TYPE: "image/jpeg",
     PART_ID_AVATAR_PICS: "avatar",
-    UPLOADED_IMGS_EXTENSION: ".jpg"
+    UPLOADED_IMGS_EXTENSION: ".jpg",
+
+    getRandomInt : function(min, max){
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    },
+
+    getUniqueId : function(len){
+        var buf = [];
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charlen = chars.length;
+        
+        for (var i = 0; i < len; ++i) {
+            buf.push(chars[this.getRandomInt(0, charlen - 1)]);
+        }
+        
+        return buf.join('');
+    },
+
+    getLocalImgFilename: function(userEmail) {
+        var localImgFile = `${userEmail.replace("@", "_")}_`;
+        localImgFile += this.PART_ID_AVATAR_PICS;
+        localImgFile += `_${this.getUniqueId(8)}`;
+        localImgFile += this.UPLOADED_IMGS_EXTENSION;
+
+        return localImgFile;
+    }
 
 }
 

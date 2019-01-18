@@ -14,7 +14,7 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     email: "john.lenon@email.com",
     name: "John Lenon",
     profilePic: "img/ico-profile.svg",
-    localProfilePic: "john.lenon_email.com_avatar.jpg",
+    localProfilePic: "",
     latestViewedNotification: ""
   };
 
@@ -55,7 +55,11 @@ app.controller('MainPageController', function ($rootScope, $scope, $ionicModal) 
     if (ionic.Platform.isIOS()) {
       $rootScope.initializeIOS();
       $rootScope.getListNotifications($rootScope.user);
+
+    } else if($rootScope.notifications.length == 0) {
+      $rootScope.getListNotifications($rootScope.user);
     }
+
   };
 
   $rootScope.closeNotificationsModal = function () {
