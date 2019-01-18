@@ -2,7 +2,7 @@
  * YnsAPP
  * 
  * A simple MVP app that showcases the capabilities of the YNS - API, a notification service that 
- * informs the user, in real time, with the best news related to the Youper app.
+ * informs the user, in real time.
  */
 
 var app = angular.module('YnsApp', [
