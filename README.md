@@ -374,3 +374,5 @@ https://gonehybrid.com/how-to-write-automated-tests-for-your-ionic-app-part-2/
 https://gonehybrid.com/how-to-write-automated-tests-for-your-ionic-app-part-3/
 https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html
 ```
+
+- > To build the Android and iOS projects, using the configuration files required by the Firebase native SDKs, please reach me out on the email available in my profile here on Github.
