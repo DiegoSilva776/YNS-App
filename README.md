@@ -1,6 +1,4 @@
-# YNS App, Youper Notification System - App
-
-[![N|Solid](https://is3-ssl.mzstatic.com/image/thumb/Purple118/v4/2b/e6/9d/2be69d78-a94b-c8fe-8a11-0e4a671c44aa/AppIcon-0-1x_U007emarketing-0-0-GLES2_U002c0-512MB-sRGB-0-0-0-85-220-0-0-0-10.png/1200x630wa.png)](https://yns-api.herokuapp.com/api/)
+# YNS App
 
 YNS App is just an MVP used to display two features that make use of the YNS API:
 
